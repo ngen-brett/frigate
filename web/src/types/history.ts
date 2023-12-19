@@ -26,7 +26,7 @@ type Timeline = {
     data: {
         [key: string]: any
     },
-    class_type: string,
+    class_type: "visible" | "gone" | "sub_label" | "entered_zone" | "attribute" | "active" | "stationary" | "heard" | "external",
     source_id: string,
     source: string,
 }

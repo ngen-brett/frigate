@@ -166,7 +166,7 @@ class TimelineProcessor(threading.Thread):
             }
         else:
             timeline_entry = {
-                Timeline.class_type: "detected",
+                Timeline.class_type: "external",
                 Timeline.timestamp: event_data["start_time"],
                 Timeline.camera: camera,
                 Timeline.source: "api",
