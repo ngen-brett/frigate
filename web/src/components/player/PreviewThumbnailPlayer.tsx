@@ -38,10 +38,16 @@ export default function PreviewThumbnailPlayer({
   }, []);
 
   const [visible, setVisible] = useState(false);
+  const [isInitialiallyVisible, setIsInitiallyVisible] = useState(false);
 
   const onPlayback = useCallback(
     (isHovered: Boolean) => {
-      if (!relevantPreview || !playerRef.current) {
+      if (!relevantPreview) {
+        return;
+      }
+
+      if (!playerRef.current) {
+        setIsInitiallyVisible(true);
         return;
       }
 
@@ -114,6 +120,7 @@ export default function PreviewThumbnailPlayer({
       content = (
         <img
           className={`${getPreviewWidth(camera, config)}`}
+          loading="lazy"
           src={`${apiHost}api/preview/${camera}/${startTs}/thumbnail.jpg`}
         />
       );
@@ -121,6 +128,7 @@ export default function PreviewThumbnailPlayer({
       content = (
         <img
           className="w-[160px]"
+          loading="lazy"
           src={`${apiHost}api/events/${eventId}/thumbnail.jpg`}
         />
       );
@@ -148,6 +156,11 @@ export default function PreviewThumbnailPlayer({
               playerRef.current = player;
               player.playbackRate(isSafari ? 2 : 8);
               player.currentTime(startTs - relevantPreview.start);
+
+              if (isInitialiallyVisible) {
+                player.play();
+                setIsInitiallyVisible(false);
+              }
             }}
             onDispose={() => {
               playerRef.current = null;
