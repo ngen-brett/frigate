@@ -137,7 +137,9 @@ class PreviewRecorder:
         )
 
         # create communication for finished previews
-        INTER_PROCESS_COMM_PORT = os.environ.get("INTER_PROCESS_COMM_PORT") or PORT_INTER_PROCESS_COMM
+        INTER_PROCESS_COMM_PORT = (
+            os.environ.get("INTER_PROCESS_COMM_PORT") or PORT_INTER_PROCESS_COMM
+        )
         self.requestor = InterProcessRequestor(INTER_PROCESS_COMM_PORT)
 
         y, u1, u2, v1, v2 = get_yuv_crop(

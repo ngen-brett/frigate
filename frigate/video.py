@@ -434,7 +434,9 @@ def track_camera(
     frame_manager = SharedMemoryFrameManager()
 
     # create communication for finished previews
-    INTER_PROCESS_COMM_PORT = os.environ.get("INTER_PROCESS_COMM_PORT") or PORT_INTER_PROCESS_COMM
+    INTER_PROCESS_COMM_PORT = (
+        os.environ.get("INTER_PROCESS_COMM_PORT") or PORT_INTER_PROCESS_COMM
+    )
     requestor = InterProcessRequestor(INTER_PROCESS_COMM_PORT)
 
     process_frames(
@@ -546,7 +548,6 @@ def process_frames(
             datetime.datetime.now().astimezone(datetime.timezone.utc)
             > next_region_update
         ):
-
             region_grid = requestor.send_data(REQUEST_REGION_GRID, camera_name)
             next_region_update = get_tomorrow_at_time(2)
 

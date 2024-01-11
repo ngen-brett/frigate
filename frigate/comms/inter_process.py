@@ -14,7 +14,9 @@ from frigate.const import PORT_INTER_PROCESS_COMM
 
 class InterProcessCommunicator(Communicator):
     def __init__(self) -> None:
-        INTER_PROCESS_COMM_PORT = os.environ.get("INTER_PROCESS_COMM_PORT") or PORT_INTER_PROCESS_COMM
+        INTER_PROCESS_COMM_PORT = (
+            os.environ.get("INTER_PROCESS_COMM_PORT") or PORT_INTER_PROCESS_COMM
+        )
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REP)
         self.socket.bind(f"tcp://*:{INTER_PROCESS_COMM_PORT}")
