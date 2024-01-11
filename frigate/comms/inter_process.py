@@ -34,16 +34,16 @@ class InterProcessCommunicator(Communicator):
     def read(self) -> None:
         while not self.stop_event.wait(1):
             try:
-                (topic, value) = self.socket.recv_json(flags=zmq.NOBLOCK)
+                (topic, value) = self.socket.recv_pyobj(flags=zmq.NOBLOCK)
             except zmq.ZMQError:
                 continue
 
             response = self._dispatcher(topic, value)
 
             if response is not None:
-                self.socket.send_json(response)
+                self.socket.send_pyobj(response)
             else:
-                self.socket.send_json([])
+                self.socket.send_pyobj([])
 
     def stop(self) -> None:
         self.stop_event.set()
@@ -62,8 +62,8 @@ class InterProcessRequestor:
 
     def send_data(self, topic: str, data: any) -> any:
         """Sends data and then waits for reply."""
-        self.socket.send_json((topic, data))
-        return self.socket.recv_json()
+        self.socket.send_pyobj((topic, data))
+        return self.socket.recv_pyobj()
 
     def stop(self) -> None:
         self.socket.close()
