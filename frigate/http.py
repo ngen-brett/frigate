@@ -784,7 +784,7 @@ def hourly_timeline_activity(camera_name: str):
         df.set_index(["date"], inplace=True)
 
         # normalize data
-        df["count"] = min(10, np.log10(df["count"], where=df["count"] > 0))
+        df["count"] = np.clip(np.log10(df["count"], where=df["count"] > 0), None, 10)
         df = df.resample("T").mean().fillna(0)
 
         # change types for output
