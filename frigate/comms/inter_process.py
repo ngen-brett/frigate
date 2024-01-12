@@ -33,17 +33,18 @@ class InterProcessCommunicator(Communicator):
 
     def read(self) -> None:
         while not self.stop_event.wait(1):
-            try:
-                (topic, value) = self.socket.recv_pyobj(flags=zmq.NOBLOCK)
-            except zmq.ZMQError:
-                continue
+            while True:  # load all messages that are queued
+                try:
+                    (topic, value) = self.socket.recv_pyobj(flags=zmq.NOBLOCK)
 
-            response = self._dispatcher(topic, value)
+                    response = self._dispatcher(topic, value)
 
-            if response is not None:
-                self.socket.send_pyobj(response)
-            else:
-                self.socket.send_pyobj([])
+                    if response is not None:
+                        self.socket.send_pyobj(response)
+                    else:
+                        self.socket.send_pyobj([])
+                except zmq.ZMQError:
+                    break
 
     def stop(self) -> None:
         self.stop_event.set()
